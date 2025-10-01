@@ -27,7 +27,7 @@ Route::middleware(['web','auth', 'verified'])->group(function () {
     Route::post('/tasks/{task}/restore', [TaskController::class, 'restore'])
     ->withTrashed() // allow binding soft deleted models
     ->name('tasks.restore');
-    Route::delete('tasks/{id}/force-delete', [TaskController::class, 'forceDelete'])->name('tasks.force-delete');
+    Route::delete('tasks/{task}/force-delete', [TaskController::class, 'forceDelete'])->name('tasks.force-delete');
 
 });
 

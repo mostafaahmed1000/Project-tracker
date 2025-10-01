@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\AttachmentApiController;
 
 Route::prefix('v1')->as('api')->group(function () {
     Route::post('auth/login', [AuthController::class, 'login']);
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::get('auth/me', [AuthController::class, 'me']);
         Route::post('auth/logout', [AuthController::class, 'logout']);
 

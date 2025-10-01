@@ -9,6 +9,7 @@ use App\Http\Requests\TaskRequest;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -57,5 +58,20 @@ class TaskController extends Controller
         $task->restore();
 
         return redirect()->back()->with('success', 'Task restored.');
+    }
+
+    public function forceDelete($id)
+    {
+        $task = Task::withTrashed()->findOrFail($id);
+
+        DB::transaction(function () use ($task) {
+        
+            foreach ($task->attachments as $attachment) {
+                \Storage::delete($attachment->file_path);
+            }
+            $task->forceDelete();
+        });
+
+        return redirect()->back()->with('success', 'Task permanently deleted.');
     }
 }

@@ -110,7 +110,7 @@
                                     {{ $task->due_date }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                     @can('update', $task)
-                                        <a href="{{ route('tasks.edit', [$project, $task]) }}"
+                                        <a href="{{ route('tasks.edit',  $task) }}"
                                             class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">Edit</a>
                                     @endcan
                                     @can('delete', $task)
