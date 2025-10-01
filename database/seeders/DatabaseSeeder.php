@@ -24,16 +24,19 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
+            'password'=> bcrypt('password'),
         ])->assignRole($adminRole);
         
         $manager = User::factory()->create([
             'name' => 'Manager User',
             'email' => 'manager@example.com',
+            'password'=> bcrypt('password'),
         ])->assignRole($managerRole);
         
         $contributor = User::factory()->create([
             'name' => 'Contributor User',
             'email' => 'contributor@example.com',
+            'password'=> bcrypt('password'),
         ])->assignRole($contributorRole);
         
         Project::factory(3)
