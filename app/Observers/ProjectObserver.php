@@ -51,7 +51,7 @@ class ProjectObserver
     protected function log(Project $entity, string $action, array $payload = [])
     {
         ProjectActivity::create([
-            'user_id'     => Auth::id() ?? 0,
+            'user_id'     => Auth::id() ?? 1,
             'entity_type' => get_class($entity),
             'entity_id'   => $entity->id,
             'action'      => $action,
