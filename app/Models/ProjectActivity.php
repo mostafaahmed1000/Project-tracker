@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectActivity extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProjectActivityFactory> */
-    use HasFactory;
+    
+    protected $table = 'project_activity';
+
+    protected $fillable = [
+        'user_id', 'entity_type', 'entity_id', 'action', 'payload',
+    ];
+
+    protected $casts = [
+        'payload' => 'array',
+    ];
 }

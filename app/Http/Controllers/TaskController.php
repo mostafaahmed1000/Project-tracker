@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use App\Models\Project;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Auth\Events\Validated;
@@ -17,16 +18,20 @@ class TaskController extends Controller
        return redirect()->back()->with('success', 'Task created.');
     }
 
-    public function edit(Project $project, Task $task)
+    public function edit(Task $task)
     {
-        return view('tasks.edit', compact('project','task'));
+        $project = $task->project;
+        $contributors = User::role('contributor')->get();
+
+        return view('tasks.edit', compact('project','task', 'contributors'));
     }
 
-    public function update(TaskRequest $request, Project $project, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
 
         $task->update($request->validated());
 
+        $project = $task->project;
         return redirect()->route('projects.show', $project)->with('success', 'Task updated.');
     }
 
@@ -38,10 +43,11 @@ class TaskController extends Controller
         return response()->json(['success' => true, 'is_done' => $task->is_done]);
     }
 
-    public function destroy(Project $project, Task $task)
+    public function destroy(Task $task)
     {
+        $project = $task->project;
         $task->delete();
-
+        
         return redirect()->route('projects.show', $project)->with('success', 'Task deleted.');
     }
 
