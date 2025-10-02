@@ -13,9 +13,13 @@ class AttachmentController extends Controller
     public function store(Request $request)
     {
 
+        try {
         $request->validate([
             'file' => 'required|file|max:10240|mimes:jpg,png,pdf,docx,txt'
         ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->with('error', 'Invalid file type or size.');
+        }
         $file = $request->file('file');
         $path = $file->store('attachments');
         Attachment::create([
