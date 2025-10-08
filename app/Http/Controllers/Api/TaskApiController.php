@@ -6,11 +6,15 @@ use App\Models\Task;
 use App\Models\Project;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class TaskApiController extends Controller
-{
+{   use AuthorizesRequests;
     public function store(Request $request, Project $project)
-    {
+    {   
+        $this->authorize('create', Task::class);
+
         $task = $project->tasks()->create($request->validate([
             'title' => 'required|string|max:255',
             'details' => 'nullable|string',
@@ -24,11 +28,13 @@ class TaskApiController extends Controller
 
     public function show(Task $task)
     {
+        $this->authorize('view', $task);
         return new TaskResource($task->load('attachments','assignee'));
     }
 
     public function update(Request $request, Task $task)
     {
+        $this->authorize('update', $task);
         $task->update($request->validate([
             'title' => 'required|string|max:255',
             'details' => 'nullable|string',
@@ -41,20 +47,21 @@ class TaskApiController extends Controller
     }
 
     public function toggleDone(Task $task)
-    {
+    {   $this->authorize('update', $task);
         $task->update(['is_done' => !$task->is_done]);
         return new TaskResource($task);
     }
 
     public function destroy(Task $task)
-    {
+    {   $this->authorize('delete', $task);
         $task->delete();
         return response()->json(null, 204);
     }
 
     public function restore($id)
-    {
+    {   
         $task = Task::withTrashed()->findOrFail($id);
+        $this->authorize('restore', $task);
         $task->restore();
         return new TaskResource($task);
     }
